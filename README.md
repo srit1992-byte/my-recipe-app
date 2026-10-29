@@ -35,7 +35,7 @@ The browser smoke test requires Playwright and Chromium (both supplied by the cu
 
 Attach a JPEG, PNG, or WebP photo (up to 2 MB) when adding or editing a recipe. Photos are saved with the recipe and included in backups; browser storage quotas still apply. You can remove a photo in the editor.
 
-Open a recipe to adjust servings from 1–100. Leading whole numbers, decimals, fractions (`1/2`), and mixed fractions (`1 1/2`) scale; unquantified ingredients remain unchanged. Enter quantities in that format rather than Unicode fractions or ranges. Adjustments affect the displayed ingredients and shopping-list additions, without changing the saved base recipe.
+Open a recipe to adjust servings to any positive number, including a fractional serving estimate. Leading whole numbers, decimals, fractions (`1/2`), and mixed fractions (`1 1/2`) scale; unquantified ingredients remain unchanged. Enter quantities in that format rather than Unicode fractions or ranges. Adjustments affect the displayed ingredients and shopping-list additions, without changing the saved base recipe.
 
 Add ingredients to the shopping list from a recipe, check purchased items, and clear the list when finished. Entries stay separate rather than attempting to merge incompatible units. The list and checkmarks persist in this browser.
 
@@ -48,3 +48,16 @@ GitHub Pages is a good fit for this static app: no backend, dependencies, or bui
 If the repository is private, GitHub Pages requires a qualifying paid plan; Cloudflare Pages has a free static-hosting option with private GitHub repository integration. Connect the repository, use no build command, and publish the repository root. Hosting has not been enabled by this implementation task.
 
 Open the same hosted HTTPS address on your phone and computer. Recipes, photos, favorites, and shopping lists remain separate in each browser and do **not** synchronize. Export on one device and import on the other for a manual transfer. Changing from the local development address to the hosted address also starts a separate collection; use a backup to transfer it.
+
+
+## Scale from an ingredient you have
+
+Open a recipe, select a measured ingredient under **Scale by ingredient**, and enter the **Quantity available** in the original unit. For example, 500 g available for a saved 300 g chicken quantity applies a factor of 500/300 to every measured ingredient. The original ingredient line is displayed alongside the control. No unit conversion is performed.
+
+The serving control and ingredient control share one scale factor calculated from the saved recipe. Switching between them replaces the scale instead of multiplying an already-scaled amount. The estimated servings update, and **Add to shopping list** uses exactly the displayed quantities. **Reset** restores the original amounts and servings. Scaling is temporary and never edits the saved recipe; reopening also starts at the original scale.
+
+Supported measurements start with a positive whole number, decimal, fraction (`1/2`), or mixed fraction (`1 1/2`). Ingredients containing “to taste,” unmeasured lines, zero quantities, and invalid fractions stay unchanged and cannot be selected as a scaling baseline. Enter a positive finite amount; invalid entries disable shopping-list additions until corrected or reset. Displayed scaled numbers are rounded to six significant digits.
+
+Cooking times do not scale proportionally. Use the original method as guidance and check doneness as you cook.
+
+Run `node tests/scaling.cjs` with the local server running for the ingredient-scaling browser tests.
