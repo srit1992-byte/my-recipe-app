@@ -16,7 +16,7 @@ Open port 8000 in a browser when your environment supports port forwarding. The 
 
 - Three starter recipes with ingredient lists and cooking instructions
 - Add, view, edit, and delete recipes; deletion requires confirmation
-- Search recipe names and ingredients, filter by category, and save favorites
+- Search recipe names and ingredients, save favorites
 - Recipes and favorites persist in localStorage in the current browser and origin
 - Responsive layouts, labeled forms, keyboard-accessible native dialogs
 
@@ -29,13 +29,13 @@ node --check app.js
 node tests/smoke.cjs
 ```
 
-The browser smoke test requires Playwright and Chromium (both supplied by the current cloud environment), plus the server running on port 8000. It uses an isolated browser context and tests creation, editing, deletion and cancellation, search, filters, favorites, persistence, safe text rendering, and mobile overflow. It does not change your normal browser's collection. If Chromium is elsewhere, update the executable path in the test.
+The browser smoke test requires Playwright and Chromium (both supplied by the current cloud environment), plus the server running on port 8000. It uses an isolated browser context and tests creation, editing, deletion and cancellation, search, search, favorites, persistence, safe text rendering, and mobile overflow. It does not change your normal browser's collection. If Chromium is elsewhere, update the executable path in the test.
 
-## Photos, servings, shopping, and backups
+## Photos, ingredient scaling, shopping, and backups
 
 Attach a JPEG, PNG, or WebP photo (up to 2 MB) when adding or editing a recipe. Photos are saved with the recipe and included in backups; browser storage quotas still apply. You can remove a photo in the editor.
 
-Open a recipe to adjust servings to any positive number, including a fractional serving estimate. Leading whole numbers, decimals, fractions (`1/2`), and mixed fractions (`1 1/2`) scale; unquantified ingredients remain unchanged. Enter quantities in that format rather than Unicode fractions or ranges. Adjustments affect the displayed ingredients and shopping-list additions, without changing the saved base recipe.
+Open a recipe to scale its ingredients using an available ingredient quantity. Recipes do not require categories or servings. Existing saved recipes and older backups remain compatible.
 
 Add ingredients to the shopping list from a recipe, check purchased items, and clear the list when finished. Entries stay separate rather than attempting to merge incompatible units. The list and checkmarks persist in this browser.
 
@@ -54,10 +54,10 @@ Open the same hosted HTTPS address on your phone and computer. Recipes, photos, 
 
 Open a recipe, select a measured ingredient under **Scale by ingredient**, and enter the **Quantity available** in the original unit. For example, 500 g available for a saved 300 g chicken quantity applies a factor of 500/300 to every measured ingredient. The original ingredient line is displayed alongside the control. No unit conversion is performed.
 
-The serving control and ingredient control share one scale factor calculated from the saved recipe. Switching between them replaces the scale instead of multiplying an already-scaled amount. The estimated servings update, and **Add to shopping list** uses exactly the displayed quantities. **Reset** restores the original amounts and servings. Scaling is temporary and never edits the saved recipe; reopening also starts at the original scale.
+Ingredient scaling always starts from the saved recipe, so switching ingredients does not multiply an already-scaled amount. **Add to shopping list** uses exactly the displayed quantities. **Reset** restores the original amounts. Scaling is temporary and never edits the saved recipe; reopening also starts at the original scale.
 
 Supported measurements start with a positive whole number, decimal, fraction (`1/2`), or mixed fraction (`1 1/2`). Ingredients containing “to taste,” unmeasured lines, zero quantities, and invalid fractions stay unchanged and cannot be selected as a scaling baseline. Enter a positive finite amount; invalid entries disable shopping-list additions until corrected or reset. Displayed scaled numbers are rounded to six significant digits.
 
 Cooking times do not scale proportionally. Use the original method as guidance and check doneness as you cook.
 
-Run `node tests/scaling.cjs` with the local server running for the ingredient-scaling browser tests.
+Run `node tests/scaling.cjs` for ingredient scaling and `node tests/simplified-form.cjs` for the simplified form and older-backup compatibility, with the local server running.
